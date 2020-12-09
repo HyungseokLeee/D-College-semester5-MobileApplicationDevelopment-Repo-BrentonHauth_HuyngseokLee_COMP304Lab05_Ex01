@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">BrentonHauth_HuyngseokLee_COMP304Lab05_Ex01</string>
+    <string name="old_buildings">Old Buildings</string>
+    <string name="museums">Museums</string>
+    <string name="stadiums">Stadiums</string>
+    <string name="attractions">Attractions</string>
 </resources>
