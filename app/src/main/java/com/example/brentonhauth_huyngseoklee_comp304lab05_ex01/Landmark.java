@@ -1,6 +1,9 @@
 package com.example.brentonhauth_huyngseoklee_comp304lab05_ex01;
 
 public class Landmark {
+    public final static String TYPE_EXTRA = "landmark_type";
+
+
     private int landmarkId;
 
     private LandmarkType type;
@@ -30,11 +33,35 @@ public class Landmark {
 
     public String getAddress() { return address; }
     public void setAddress(String address) { this.address = address; }
+
+    public static Landmark[] getLandmarksByType(LandmarkType type) {
+        return new Landmark[0]; // temporary
+    }
+
+    public static int getTypeColor(LandmarkType type) {
+        // Switch statement yields warning
+        if (type == LandmarkType.OLD_BUILDING) {
+            return R.color.colorOldBuildings;
+        } else if (type == LandmarkType.MUSEUM) {
+            return R.color.colorMuseums;
+        } else if (type == LandmarkType.STADIUM) {
+            return R.color.colorStadiums;
+        } else if (type == LandmarkType.ATTRACTION) {
+            return R.color.colorAttractions;
+        } else return 0;
+    }
 }
 
 enum LandmarkType {
+    // I may want to convert these into int constants,
+    // as enums work differently in java compared to C#
     OLD_BUILDING,
     MUSEUM,
     STADIUM,
-    ATTRACTION
+    ATTRACTION;
+
+    public String format() {
+        String str = this.toString();
+        return str.replace('_', ' ') + "S";
+    }
 }
