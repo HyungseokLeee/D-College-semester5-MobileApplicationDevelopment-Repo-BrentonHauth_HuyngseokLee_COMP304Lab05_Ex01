@@ -6,6 +6,9 @@ import android.view.View;
 public enum LandmarkType {
     // I may want to convert these into int constants,
     // as enums work differently in java compared to C#
+
+    MALL(R.color.colorMalls),
+    PARK(R.color.colorParks),
     OLD_BUILDING(R.color.colorOldBuildings),
     MUSEUM(R.color.colorMuseums),
     STADIUM(R.color.colorStadiums),

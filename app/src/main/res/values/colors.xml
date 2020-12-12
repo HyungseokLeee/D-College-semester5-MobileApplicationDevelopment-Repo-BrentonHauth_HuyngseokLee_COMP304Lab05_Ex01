@@ -15,7 +15,8 @@
     <!--    <color name="type_button_color_4">#E91E63</color>-->
     <!--    <color name="type_button_color_5">#F44336</color>-->
 
-
+    <color name="colorMalls">#12a0f4</color>
+    <color name="colorParks">#3F51B5</color>
     <color name="colorOldBuildings">#673AB7</color>
     <color name="colorMuseums">#9C27B0</color>
     <color name="colorStadiums">#E91E63</color>
