@@ -11,7 +11,7 @@ import android.os.Bundle;
 public class LandmarksActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private LandmarkType type;
+    private LandmarkType landmarkType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,22 +19,22 @@ public class LandmarksActivity extends AppCompatActivity {
         setContentView(R.layout.activity_landmarks);
 
         getTypeFromIntent();
-
-        initRecycler();
     }
 
     private void getTypeFromIntent() {
         Intent in = getIntent();
         String str = in.getStringExtra(Landmark.TYPE_EXTRA);
         if (str == null) finish();
-        type = LandmarkType.valueOf(str);
-        setTitle(type.format());
+        landmarkType = LandmarkType.valueOf(str);
+        setTitle(landmarkType.format());
+        initRecycler();
     }
 
     private void initRecycler() {
         recyclerView = findViewById(R.id.landmarksRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        LandmarkAdapter adapter = new LandmarkAdapter(Landmark.getLandmarksByType(type));
+        LandmarkAdapter adapter = new LandmarkAdapter(
+                Landmark.getLandmarksByType(landmarkType, true));
         recyclerView.setAdapter(adapter);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.brentonhauth_huyngseoklee_comp304lab05_ex01;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.View;
 
 public enum LandmarkType {
@@ -24,8 +25,12 @@ public enum LandmarkType {
     public int getColorFrom(Context c) { return c.getResources().getInteger(color); }
     public int getColorFrom(View v) { return v.getResources().getInteger(color); }
 
+    public String format(boolean plural) {
+        String str = toString().replace('_', ' ');
+        return plural ? str + "S" : str;
+    }
+
     public String format() {
-        String str = toString();
-        return str.replace('_', ' ') + "S";
+        return format(true);
     }
 }

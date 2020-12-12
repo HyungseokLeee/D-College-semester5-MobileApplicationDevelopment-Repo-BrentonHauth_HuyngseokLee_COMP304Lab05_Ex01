@@ -1,5 +1,7 @@
 package com.example.brentonhauth_huyngseoklee_comp304lab05_ex01;
 
+import android.util.Log;
+
 import com.google.android.gms.maps.model.LatLng;
 
 public class Landmark {
@@ -80,11 +82,18 @@ public class Landmark {
     public LatLng getLatLng() { return new LatLng(latitude, longitude); }
 
 
-    public static Landmark[] getLandmarksByType(LandmarkType type) {
+    public static Landmark[] getLandmarksByType(LandmarkType type, boolean b) {
+        Landmark[] ofType = new Landmark[3]; // Temporary hard code length
+        int x = 0;
+        for (Landmark landmark : landmarks) {
+            if (landmark.type == type) {
+                Log.d("getLandmarksByType", "found: " + landmark.name);
+                ofType[x++] = landmark;
+                if (x == 3) break;
+            }
+        }
 
-//        for (int i = 0; i < )
-
-        return new Landmark[0]; // temporary
+        return ofType; // temporary
     }
 
     // TODO: Remove this method when it is safe to do so

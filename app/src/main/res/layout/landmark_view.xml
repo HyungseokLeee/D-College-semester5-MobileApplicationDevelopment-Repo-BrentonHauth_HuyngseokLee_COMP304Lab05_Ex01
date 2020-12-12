@@ -2,15 +2,47 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <TextView
-        android:id="@+id/landmarkTextView"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:id="@+id/landmarkNameTextView"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="CN Tower"
+        android:textColor="#3e3e3e"
+        android:layout_marginStart="16dp"
+        android:textSize="11pt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/landmarkTypeTextView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/landmarkNameTextView"
+        android:text="ATTRACTION"
+        android:textSize="6pt"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="16dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/landmarkAddressTextView"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:text="290 Bremner Blvd, Toronto, ON M5V 3L9"
+        app:layout_constraintTop_toBottomOf="@id/landmarkNameTextView"
+        android:textSize="6.5pt"
+        app:layout_constraintStart_toStartOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <View
+        android:layout_marginTop="16dp"
+        android:background="#808080"
+        app:layout_constraintTop_toBottomOf="@id/landmarkAddressTextView"
+        android:layout_width="match_parent"
+        android:layout_height="1dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

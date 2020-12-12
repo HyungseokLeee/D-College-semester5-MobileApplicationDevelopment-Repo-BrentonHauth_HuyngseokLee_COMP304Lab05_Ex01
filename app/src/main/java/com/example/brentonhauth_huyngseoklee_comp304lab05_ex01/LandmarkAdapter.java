@@ -1,5 +1,6 @@
 package com.example.brentonhauth_huyngseoklee_comp304lab05_ex01;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,12 +29,13 @@ public class LandmarkAdapter extends RecyclerView.Adapter<LandmarkAdapter.Landma
 
     @Override
     public void onBindViewHolder(@NonNull LandmarkHolder holder, int i) {
+        Log.d("onBindViewHolder", landmarks[i].getName());
         holder.setLandmark(landmarks[i]);
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return landmarks.length;
     }
 
     public static class LandmarkHolder
@@ -42,18 +44,25 @@ public class LandmarkAdapter extends RecyclerView.Adapter<LandmarkAdapter.Landma
 
         private Landmark landmark;
 
-        private TextView landmarkTextView;
+        private final TextView nameTextView, typeTextView, addressTextView;
 
         public LandmarkHolder(@NonNull View view) {
             super(view);
-            landmarkTextView = view.findViewById(R.id.landmarkTextView);
+            nameTextView = view.findViewById(R.id.landmarkNameTextView);
+            typeTextView = view.findViewById(R.id.landmarkTypeTextView);
+            addressTextView = view.findViewById(R.id.landmarkAddressTextView);
+
             view.setOnClickListener(this);
         }
 
         public void setLandmark(Landmark landmark) {
             this.landmark = landmark;
-            //landmarkTextView.setText(landmark.getName() + ", " + landmark.getAddress());
-            // ...
+            nameTextView.setText(landmark.getName());
+            addressTextView.setText(landmark.getAddress());
+
+            LandmarkType type = landmark.getType();
+            typeTextView.setText(String.format("%s", type.format(false)));
+            typeTextView.setTextColor(type.getColorFrom(itemView));
         }
 
         @Override
