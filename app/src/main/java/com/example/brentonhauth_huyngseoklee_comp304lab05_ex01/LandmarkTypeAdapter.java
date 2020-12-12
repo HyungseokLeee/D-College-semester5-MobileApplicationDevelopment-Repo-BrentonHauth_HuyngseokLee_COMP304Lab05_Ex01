@@ -54,10 +54,7 @@ public class LandmarkTypeAdapter
         public void setType(LandmarkType type) {
             this.type = type;
             landmarkTypeButton.setText(type.format());
-
-            int c = Landmark.getTypeColor(type);
-            c = itemView.getResources().getInteger(c);
-            landmarkTypeButton.setBackgroundColor(c);
+            landmarkTypeButton.setBackgroundColor(type.getColorFrom(itemView));
         }
 
         @Override

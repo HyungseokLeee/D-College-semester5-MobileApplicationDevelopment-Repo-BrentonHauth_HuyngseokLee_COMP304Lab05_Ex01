@@ -53,16 +53,9 @@ public class Landmark {
         return new Landmark[0]; // temporary
     }
 
+    // TODO: Remove this method when it is safe to do so
     public static int getTypeColor(LandmarkType type) {
         // Switch statement yields warning
-        if (type == LandmarkType.OLD_BUILDING) {
-            return R.color.colorOldBuildings;
-        } else if (type == LandmarkType.MUSEUM) {
-            return R.color.colorMuseums;
-        } else if (type == LandmarkType.STADIUM) {
-            return R.color.colorStadiums;
-        } else if (type == LandmarkType.ATTRACTION) {
-            return R.color.colorAttractions;
-        } else return 0;
+        return type.getColor();
     }
 }
