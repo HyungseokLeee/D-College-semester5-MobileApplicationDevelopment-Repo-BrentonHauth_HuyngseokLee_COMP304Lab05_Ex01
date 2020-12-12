@@ -14,14 +14,18 @@ public class Landmark {
 
     private double longitude, latitude;
 
+    private String address;
+
     public Landmark() {}
 
-    public Landmark(int landmarkId, LandmarkType type, String name, double lat, double lng) {
+    public Landmark(int landmarkId, LandmarkType type,
+                    String name, String address, double lat, double lng) {
         this.landmarkId = landmarkId;
         this.type = type;
         this.name = name;
         this.latitude = lat;
         this.longitude = lng;
+        this.address = address;
     }
 
     public int getLandmarkId() { return landmarkId; }
@@ -38,6 +42,9 @@ public class Landmark {
 
     public double getLatitude() { return latitude; }
     public void setLatitude(double latitude) { this.latitude = latitude; }
+
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
 
     public LatLng getLatLng() { return new LatLng(latitude, longitude); }
 
