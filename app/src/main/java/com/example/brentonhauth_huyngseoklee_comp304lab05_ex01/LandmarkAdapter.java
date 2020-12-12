@@ -52,7 +52,7 @@ public class LandmarkAdapter extends RecyclerView.Adapter<LandmarkAdapter.Landma
 
         public void setLandmark(Landmark landmark) {
             this.landmark = landmark;
-            landmarkTextView.setText(landmark.getName() + ", " + landmark.getAddress());
+            //landmarkTextView.setText(landmark.getName() + ", " + landmark.getAddress());
             // ...
         }
 
