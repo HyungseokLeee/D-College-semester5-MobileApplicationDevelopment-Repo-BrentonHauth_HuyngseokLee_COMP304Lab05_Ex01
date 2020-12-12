@@ -1,5 +1,7 @@
 package com.example.brentonhauth_huyngseoklee_comp304lab05_ex01;
 
+import com.google.android.gms.maps.model.LatLng;
+
 public class Landmark {
     public final static String TYPE_EXTRA = "landmark_type";
 
@@ -10,16 +12,16 @@ public class Landmark {
 
     private String name;
 
-    // May want to use longitude & latitude instead of address
-    private String address;
+    private double longitude, latitude;
 
     public Landmark() {}
 
-    public Landmark(int landmarkId, LandmarkType type, String name, String address) {
+    public Landmark(int landmarkId, LandmarkType type, String name, double lat, double lng) {
         this.landmarkId = landmarkId;
         this.type = type;
         this.name = name;
-        this.address = address;
+        this.latitude = lat;
+        this.longitude = lng;
     }
 
     public int getLandmarkId() { return landmarkId; }
@@ -31,8 +33,14 @@ public class Landmark {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
-    public String getAddress() { return address; }
-    public void setAddress(String address) { this.address = address; }
+    public double getLongitude() { return longitude; }
+    public void setLongitude(double longitude) { this.longitude = longitude; }
+
+    public double getLatitude() { return latitude; }
+    public void setLatitude(double latitude) { this.latitude = latitude; }
+
+    public LatLng getLatLng() { return new LatLng(latitude, longitude); }
+
 
     public static Landmark[] getLandmarksByType(LandmarkType type) {
         return new Landmark[0]; // temporary
@@ -49,19 +57,5 @@ public class Landmark {
         } else if (type == LandmarkType.ATTRACTION) {
             return R.color.colorAttractions;
         } else return 0;
-    }
-}
-
-enum LandmarkType {
-    // I may want to convert these into int constants,
-    // as enums work differently in java compared to C#
-    OLD_BUILDING,
-    MUSEUM,
-    STADIUM,
-    ATTRACTION;
-
-    public String format() {
-        String str = this.toString();
-        return str.replace('_', ' ') + "S";
     }
 }
