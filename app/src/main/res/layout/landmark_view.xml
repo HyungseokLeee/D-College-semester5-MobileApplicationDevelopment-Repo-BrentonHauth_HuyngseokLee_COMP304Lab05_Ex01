@@ -33,7 +33,7 @@
         android:layout_marginTop="4dp"
         android:text="290 Bremner Blvd, Toronto, ON M5V 3L9"
         app:layout_constraintTop_toBottomOf="@id/landmarkNameTextView"
-        android:textSize="6.5pt"
+        android:textSize="7pt"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

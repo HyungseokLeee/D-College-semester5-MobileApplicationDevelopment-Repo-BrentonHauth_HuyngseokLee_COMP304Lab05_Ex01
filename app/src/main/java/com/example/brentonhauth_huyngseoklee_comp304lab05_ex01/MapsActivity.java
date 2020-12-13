@@ -1,10 +1,8 @@
 package com.example.brentonhauth_huyngseoklee_comp304lab05_ex01;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -41,8 +39,6 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
@@ -61,7 +57,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LatLng mapLocation;
     private LatLng landMarkLocation;
     private LocationRequest mLocationRequest;
-    private TextView mTextView;
     private List<Marker> mMarkers = new ArrayList<>();
     private Polyline mPolyline;
 
@@ -70,15 +65,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int LOCATION_PERMISSION_REQUEST = 1;
     private static final int REQUEST_CHECK_SETTINGS = 2;
 
+    private boolean targeted = false;
+
     private Landmark landmark;
 
+    private TextView mapLandmarkNameTextView,
+            mapLandmarkTypeTextView,
+            mapLandmarkAddressTextView,
+            mapLandmarkLatLngTextView;
+
+    // TODO:
+    //  - Clean up activity
+    //  - add a 'Marker' to landmark
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        initLandmarkTextViews(); // Sets all landmark information fields
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        mTextView = findViewById(R.id.myLocationText);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -113,6 +120,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         if (landmark != null) {
             mapLocation = landmark.getLatLng();
+            updateLandmarkInformation();
+            targetLandmark();
         } else finish();
     }
 
@@ -126,27 +135,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * installed Google Play services and returned to the app.
      */
 
-    private void updateTextView(Location location) {
-        String latLongString = "No location found";
-        if (location != null) {
-            double lat = location.getLatitude();
-            double lng = location.getLongitude();
-            latLongString = "Lat:" + lat + "\nLong:" + lng;
-        }
+//    private void updateTextView(Location location) {
+//        String latLongString = "No location found";
+//        if (location != null) {
+//            double lat = location.getLatitude();
+//            double lng = location.getLongitude();
+//            latLongString = "Lat:" + lat + "\nLong:" + lng;
+//        }
+//
+//        String address = geocodeLocation(location);
+//
+//
+//
+//        String outputText = "Your Current Position is:\n" + latLongString;
+//        if (!address.isEmpty())
+//            outputText += "\n\n" + address;
+//    }
 
-        String address = geocodeLocation(location);
-
-        String outputText = "Your Current Position is:\n" + latLongString;
-        if (!address.isEmpty())
-            outputText += "\n\n" + address;
-
-        mTextView.setText(outputText);
-    }
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setMapType((GoogleMap.MAP_TYPE_SATELLITE));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(17));
+//        mMap.setMapType(GoogleMap.);
 
         // Add a marker in Sydney and move the camera
         //Currently commented out for when needed attributes are implemented.
@@ -154,14 +163,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.addMarker(new MarkerOptions().position(landMarkLocation).title("Marker in Toronto"));
          */
 
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(this,
-                        Manifest.permission.ACCESS_COARSE_LOCATION)
-                        == PackageManager.PERMISSION_GRANTED) {
+        int accessFine = ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION),
+            accessCoarse = ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION);
+
+        if (accessFine == PackageManager.PERMISSION_GRANTED ||
+           accessCoarse  == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
         }
+
+        if (!targeted) {
+            // Zooms in on the landmark
+            targetLandmark();
+        }
+
         //set options for a poplyline
         PolylineOptions polylineOptions = new PolylineOptions()
                 .color(Color.CYAN)
@@ -169,21 +183,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //add polyline to the map
         mPolyline = mMap.addPolyline(polylineOptions);
     }
+
     LocationCallback mLocationCallback = new LocationCallback() {
         //called when device location information is available.
         @Override
         public void onLocationResult(LocationResult locationResult) {
             Location location = locationResult.getLastLocation();
+//            if (location != null) {
+//                updateTextView(location);
+//            }
             if (location != null) {
-                updateTextView(location);
-            }
-            if (location != null) {
-                updateTextView(location);
+//                updateTextView(location);
                 if (mMap != null) {
-                    LatLng latLng = new LatLng(location.getLatitude(),
-                            location.getLongitude());
+                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                     //animates the movement of the camera to the updated position
-                    mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+//                    mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
 
                     Calendar c = Calendar.getInstance();
                     String dateTime = DateFormat.format("MM/dd/yyyy HH:mm:ss",
@@ -206,14 +220,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }
     };
+
     @Override
     //Update the current location each time the app becomes visible:
     protected void onStart() {
         super.onStart();
 
         // Check if we have permission to access high accuracy fine location.
-        int permission = ActivityCompat.checkSelfPermission(this,
-                ACCESS_FINE_LOCATION);
+        int permission = ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION);
 
         // If permission is granted, fetch the last location.
         if (permission == PERMISSION_GRANTED) {
@@ -221,8 +235,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         } else {
             // If permission has not been granted, request permission.
             ActivityCompat.requestPermissions(this,
-                    new String[]{ACCESS_FINE_LOCATION},
-                    LOCATION_PERMISSION_REQUEST);
+                new String[] { ACCESS_FINE_LOCATION },
+                LOCATION_PERMISSION_REQUEST);
         }
 
         // Check if the location settings are compatible with our Location Request.
@@ -267,17 +281,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
     private void requestLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION)
-                == PERMISSION_GRANTED ||
-                ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION)
-                        == PERMISSION_GRANTED) {
 
-            FusedLocationProviderClient fusedLocationClient
-                    = LocationServices.getFusedLocationProviderClient(this);
-            //register for location updates
-            fusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
+        int accessFine = ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION),
+            accessCoarse = ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION);
+
+        if (accessFine == PERMISSION_GRANTED || accessCoarse == PERMISSION_GRANTED) {
+            LocationServices //register for location updates
+                .getFusedLocationProviderClient(this)
+                .requestLocationUpdates(mLocationRequest, mLocationCallback, null);
         }
     }
+
     private void getLastLocation() {
         FusedLocationProviderClient fusedLocationClient;
         fusedLocationClient =
@@ -287,54 +301,49 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION)
                         == PERMISSION_GRANTED) {
             //return the best most recent location currently available
-            fusedLocationClient.getLastLocation()
-                    .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            updateTextView(location);
-                        }
-                    });
+//            fusedLocationClient
+//                    .getLastLocation()
+//                    .addOnSuccessListener(this, this::updateTextView);
         }
     }
     private String geocodeLocation(Location location) {
-        String returnString = "";
-
         if (location == null) {
             Log.d(TAG, "No Location to Geocode");
-            return returnString;
+            return "";
         }
 
         if (!Geocoder.isPresent()) {
             Log.e(TAG, "No Geocoder Available");
-            return returnString;
-        } else {
-            Geocoder gc = new Geocoder(this, Locale.getDefault());
-            try {
-                //return a list of addresses
-                List<Address> addresses
-                        = gc.getFromLocation(location.getLatitude(),
-                        location.getLongitude(),
-                        1); // One Result
-
-                StringBuilder sb = new StringBuilder();
-
-                if (addresses.size() > 0) {
-                    Address address = addresses.get(0);
-
-                    for (int i = 0; i < address.getMaxAddressLineIndex(); i++)
-                        sb.append(address.getAddressLine(i)).append("\n");
-
-                    sb.append(address.getLocality()).append("\n");
-                    sb.append(address.getPostalCode()).append("\n");
-                    sb.append(address.getCountryName());
-                }
-                returnString = sb.toString();
-            } catch (IOException e) {
-                Log.e(TAG, "I/O Error Geocoding.", e);
-            }
-            return returnString;
+            return "";
         }
+
+        String returnString = "";
+
+        Geocoder gc = new Geocoder(this, Locale.getDefault());
+        try {
+            //return a list of addresses
+            List<Address> addresses = gc.getFromLocation(
+                location.getLatitude(), location.getLongitude(), 1); // One Result
+
+            StringBuilder sb = new StringBuilder();
+
+            if (addresses.size() > 0) {
+                Address address = addresses.get(0);
+
+                for (int i = 0; i < address.getMaxAddressLineIndex(); i++)
+                    sb.append(address.getAddressLine(i)).append("\n");
+
+                sb.append(address.getLocality()).append("\n");
+                sb.append(address.getPostalCode()).append("\n");
+                sb.append(address.getCountryName());
+            }
+            returnString = sb.toString();
+        } catch (IOException e) {
+            Log.e(TAG, "I/O Error Geocoding.", e);
+        }
+        return returnString;
     }
+
     public void setMapLocation(LatLng newLatLng)
     {
         mapLocation = newLatLng;
@@ -343,5 +352,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     {
         landMarkLocation = newLatLng;
     }
+
+
+    private void updateLandmarkInformation() {
+        mapLandmarkNameTextView.setText(landmark.getName());
+        mapLandmarkAddressTextView.setText(landmark.getAddress());
+
+        String latLngText = String.format("@ %s, %s",
+            landmark.getLatitude(), landmark.getLongitude());
+        mapLandmarkLatLngTextView.setText(latLngText);
+
+        LandmarkType type = landmark.getType();
+        mapLandmarkTypeTextView.setText(type.format(false));
+        mapLandmarkTypeTextView.setTextColor(type.getColorFrom(this));
+    }
+
+    private void initLandmarkTextViews() {
+        mapLandmarkNameTextView = findViewById(R.id.mapLandmarkNameTextView);
+        mapLandmarkTypeTextView = findViewById(R.id.mapLandmarkTypeTextView);
+        mapLandmarkAddressTextView = findViewById(R.id.mapLandmarkAddressTextView);
+        mapLandmarkLatLngTextView = findViewById(R.id.mapLandmarkLatLngTextView);
+    }
+
+    /**
+     * This allows us to zoom in on the the landmark
+     */
+    private void targetLandmark() {
+        if (landmark != null && mMap != null) {
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(landmark.getLatLng(), 15));
+            targeted = true;
+        }
+    }
+
+//    private
 
 }
