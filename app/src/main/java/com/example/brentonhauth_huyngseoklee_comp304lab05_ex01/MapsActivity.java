@@ -55,7 +55,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private LatLng mapLocation;
-    private LatLng landMarkLocation;
     private LocationRequest mLocationRequest;
     private List<Marker> mMarkers = new ArrayList<>();
     private Polyline mPolyline;
@@ -103,7 +102,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mLocationRequest = new LocationRequest()
                 .setInterval(5000)
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        //Temporal default values(Will be removed at the completion of the implementation
 
         Intent in = getIntent();
         int id = in.getIntExtra(Landmark.ID_EXTRA, -1);
@@ -135,33 +133,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * installed Google Play services and returned to the app.
      */
 
-//    private void updateTextView(Location location) {
-//        String latLongString = "No location found";
-//        if (location != null) {
-//            double lat = location.getLatitude();
-//            double lng = location.getLongitude();
-//            latLongString = "Lat:" + lat + "\nLong:" + lng;
-//        }
-//
-//        String address = geocodeLocation(location);
-//
-//
-//
-//        String outputText = "Your Current Position is:\n" + latLongString;
-//        if (!address.isEmpty())
-//            outputText += "\n\n" + address;
-//    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-//        mMap.setMapType(GoogleMap.);
+        mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
 
         // Add a marker in Sydney and move the camera
         //Currently commented out for when needed attributes are implemented.
-        /*
-        mMap.addMarker(new MarkerOptions().position(landMarkLocation).title("Marker in Toronto"));
-         */
 
         int accessFine = ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION),
             accessCoarse = ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION);
@@ -197,7 +176,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if (mMap != null) {
                     LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                     //animates the movement of the camera to the updated position
-//                    mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
 
                     Calendar c = Calendar.getInstance();
                     String dateTime = DateFormat.format("MM/dd/yyyy HH:mm:ss",
@@ -300,10 +278,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 == PERMISSION_GRANTED ||
                 ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION)
                         == PERMISSION_GRANTED) {
-            //return the best most recent location currently available
-//            fusedLocationClient
-//                    .getLastLocation()
-//                    .addOnSuccessListener(this, this::updateTextView);
         }
     }
     private String geocodeLocation(Location location) {
@@ -344,16 +318,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return returnString;
     }
 
-    public void setMapLocation(LatLng newLatLng)
-    {
-        mapLocation = newLatLng;
-    }
-    public void setLandMarkLocations(LatLng newLatLng)
-    {
-        landMarkLocation = newLatLng;
-    }
-
-
     private void updateLandmarkInformation() {
         mapLandmarkNameTextView.setText(landmark.getName());
         mapLandmarkAddressTextView.setText(landmark.getAddress());
@@ -383,7 +347,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             targeted = true;
         }
     }
-
-//    private
 
 }
