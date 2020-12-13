@@ -1,5 +1,7 @@
 package com.example.brentonhauth_huyngseoklee_comp304lab05_ex01;
 
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,6 +73,11 @@ public class LandmarkAdapter extends RecyclerView.Adapter<LandmarkAdapter.Landma
             Toast.makeText(itemView.getContext(),
                 "Clicked " + landmark.getName(),
                 Toast.LENGTH_SHORT).show();
+
+            Context ctx = v.getContext();
+            Intent in = new Intent(ctx, MapsActivity.class);
+            in.putExtra(Landmark.ID_EXTRA, landmark.getLandmarkId());
+            ctx.startActivity(in);
         }
     }
 }

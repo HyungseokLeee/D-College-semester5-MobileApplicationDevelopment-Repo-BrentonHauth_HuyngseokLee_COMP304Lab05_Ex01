@@ -5,6 +5,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -69,6 +70,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int LOCATION_PERMISSION_REQUEST = 1;
     private static final int REQUEST_CHECK_SETTINGS = 2;
 
+    private Landmark landmark;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,7 +97,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .setInterval(5000)
                 .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         //Temporal default values(Will be removed at the completion of the implementation
-        mapLocation = new LatLng(43.6, -79.4);
+
+        Intent in = getIntent();
+        int id = in.getIntExtra(Landmark.ID_EXTRA, -1);
+
+        if (id == -1) {
+            Toast.makeText(this,
+                "invalid landmark!",
+                Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        landmark = Landmark.getLandmarkById(id);
+
+        if (landmark != null) {
+            mapLocation = landmark.getLatLng();
+        } else finish();
     }
 
     /**
@@ -215,43 +234,35 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SettingsClient client = LocationServices.getSettingsClient(this);
         Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
         //To be notified when the task succeeds
-        task.addOnSuccessListener(this,
-                new OnSuccessListener<LocationSettingsResponse>() {
-                    @Override
-                    //called when the task completes successfully
-                    public void onSuccess(LocationSettingsResponse
-                                                  locationSettingsResponse) {
-                        // Location settings satisfy the requirements of the Location Request.
-                        // Request location updates.
-                        requestLocationUpdates();
+        //called when the task completes successfully
+        task.addOnSuccessListener(this, locationSettingsResponse -> {
+            // Location settings satisfy the requirements of the Location Request.
+            // Request location updates.
+            requestLocationUpdates();
+        });
+
+        task.addOnFailureListener(this, e -> {
+            // Extract the status code for the failure from within the Exception.
+            int statusCode = ((ApiException) e).getStatusCode();
+
+            switch (statusCode) {
+                case CommonStatusCodes.RESOLUTION_REQUIRED:
+                    try {
+                        // Display a user dialog to resolve the location settings
+                        // issue.
+                        ResolvableApiException resolvable = (ResolvableApiException) e;
+                        resolvable.startResolutionForResult(MapsActivity.this,
+                                REQUEST_CHECK_SETTINGS);
+                    } catch (IntentSender.SendIntentException sendEx) {
+                        Log.e(TAG, "Location Settings resolution failed.", sendEx);
                     }
-                });
-
-        task.addOnFailureListener(this, new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                // Extract the status code for the failure from within the Exception.
-                int statusCode = ((ApiException) e).getStatusCode();
-
-                switch (statusCode) {
-                    case CommonStatusCodes.RESOLUTION_REQUIRED:
-                        try {
-                            // Display a user dialog to resolve the location settings
-                            // issue.
-                            ResolvableApiException resolvable = (ResolvableApiException) e;
-                            resolvable.startResolutionForResult(MapsActivity.this,
-                                    REQUEST_CHECK_SETTINGS);
-                        } catch (IntentSender.SendIntentException sendEx) {
-                            Log.e(TAG, "Location Settings resolution failed.", sendEx);
-                        }
-                        break;
-                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        // Location settings issues can't be resolved by user.
-                        // Request location updates anyway.
-                        Log.d(TAG, "Location Settings can't be resolved.");
-                        requestLocationUpdates();
-                        break;
-                }
+                    break;
+                case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                    // Location settings issues can't be resolved by user.
+                    // Request location updates anyway.
+                    Log.d(TAG, "Location Settings can't be resolved.");
+                    requestLocationUpdates();
+                    break;
             }
         });
     }

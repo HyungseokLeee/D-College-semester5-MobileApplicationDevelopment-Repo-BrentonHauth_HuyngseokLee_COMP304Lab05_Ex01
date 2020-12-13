@@ -5,7 +5,9 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 
 public class Landmark {
-    public final static String TYPE_EXTRA = "landmark_type";
+    public final static String
+        TYPE_EXTRA = "landmark_type",
+        ID_EXTRA = "landmark_id";
     private static int idCount = 0;
 
     private final static Landmark[] landmarks = {
@@ -100,5 +102,14 @@ public class Landmark {
     public static int getTypeColor(LandmarkType type) {
         // Switch statement yields warning
         return type.getColor();
+    }
+
+    public static Landmark getLandmarkById(int id) {
+        for (Landmark lm : landmarks) {
+            if (lm.getLandmarkId() == id) {
+                return lm;
+            }
+        }
+        return null;
     }
 }
