@@ -22,7 +22,6 @@
             android:id="@+id/mapLandmarkNameTextView"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="CN Tower"
             android:textColor="#3e3e3e"
             android:layout_marginStart="16dp"
             android:textSize="11pt"
@@ -33,7 +32,6 @@
             android:id="@+id/mapLandmarkTypeTextView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/mapLandmarkNameTextView"
-            android:text="ATTRACTION"
             android:textSize="6pt"
             android:layout_marginTop="3dp"
             android:layout_marginEnd="16dp"
@@ -45,7 +43,6 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="16dp"
-            android:text="290 Bremner Blvd, Toronto, ON M5V 3L9"
             app:layout_constraintTop_toBottomOf="@id/mapLandmarkNameTextView"
             android:textSize="7pt"
             app:layout_constraintStart_toStartOf="parent"
@@ -59,7 +56,6 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:textSize="6pt"
-            android:text="Lat 4444444444444444"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -379,7 +379,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     private void targetLandmark() {
         if (landmark != null && mMap != null) {
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(landmark.getLatLng(), 15));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(landmark.getLatLng(), 18));
             targeted = true;
         }
     }
